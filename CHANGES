@@ -1,0 +1,307 @@
+2.0.4
+
+- Fixed jar building issues.
+
+2.0.3
+
+- new Jackknife class to compute arbitrary-precision jackknife estimates.
+
+- Fixed bug in SummaryStats.max().
+
+- Now property files use "=" instead of " = " as separator, thanks to the
+  new setter in PropertiesConfigurationLayout, and are thus sourceable.
+
+- Now XorShiftStarRandom uses the right number of bits to generate doubles
+  and floats: the previous version could occasionally generate 1.
+
+- New ByteBufferLongBigList class (along the lines of
+  ByteBufferInputStream) that exposes arbitrarily large binary files of
+  longs (with settable endianness) as a big list.
+
+- We now use Ivy to handle jar dependencies.
+
+2.0.2
+
+- Now ByteBufferInputStream initialises copies lazily, which should help
+  when mapping large files with concurrent access (e.g., WebGraph's).
+
+- Now XorShiftStarRandom uses 63 bits to generate doubles, and provides
+  truly uniform nextInt(int) and nextLong(long) methods.
+
+- Fixed computation of singular names in ProgressLogger.
+
+- Now IntHyperLogLogCounterArray has a count() method that returns the
+  estimate of a single counter.
+
+2.0.1
+
+- Now there are permutation methods for big arrays.
+
+- New SummaryStats class for basic statistics bookkeeping (I know,
+  there are billions of those, but we wanted something really
+  simple, fast, and supporting >2^31 values).
+
+2.0
+
+- WARNING: This release has minor binary incompatibilities with previous
+  releases, mainly due to the move from the interface
+  it.unimi.dsi.util.LongBigList to the now standard
+  it.unimi.dsi.fasutil.longs.LongBigList. It is part of a parallel release
+  of fastutil, the DSI Utilities, Sux4J, MG4J, WebGraph, etc. that were
+  all modified to fit the new interface, and that prepare the way for our
+  "big" versions, that is, supporting >2^31 entries in arrays (simulated),
+  elements in lists, terms, documents, nodes, etc. Please read our (short)
+  "Moving Java to Big Data" document (JavaBig.pdf) for details.
+
+- We now require Java 6.
+
+- it.unimi.dsi.util.LongBigList is dead. Long live to
+  it.unimi.dsi.fastutil.longs.LongBigList. We're sorry for the
+  nuisance--adapting the code should be very easy (and we warned you
+  anyway :).
+
+- New it.unimi.dsi.big namespace for classes that need redesign to handle
+  collections with more than Integer.MAX_VALUE elements. Presently we
+  provide an adaptation of all classes built around StringMap. The classes
+  have the same name of the non-big counterparts, so watch out.
+
+- Now you can save directly a synchronised ImmutableExternalPrefixMap.
+
+- Instances of an ImmutableExternalPrefixMap contain now a small cache
+  that will store the most recent answers.
+
+- Transformation strategies now have a length method that computes the
+  length of a representation (possibly without actually computing the
+  representation).
+
+- New method BitVector.equals(v,from,to) that compares segments of
+  two bit vectors.
+
+- A ProgressLogger will now print the time per item (besides the
+  number of items per time unit). Some patterns compute the
+  correct singular from the plural item name.
+
+- The automatic Log4J configuration system will now log on stderr
+  instead of stdout.
+
+- Fixed very old bug of Interval: the implemented sorted set was
+  returning iterators with an off-by-one starting point.
+
+- Fixed very old bug in OutputBitStream.position() for wrapped output
+  streams. Thanks to Soumen Chakrabarti for reporting this bug.
+
+1.0.12
+
+- The DSI utilities are now distributed under the GNU Lesser General Public
+  License 3.
+
+- We are no longer dependent on COLT, thanks to the new sorting stuff in
+  fastutil (which, in fact, is partially borrowed from COLT) and
+  java.security.SecureRandom.
+
+- New IntHyperLogLogCounterArray that computes estimates of unique elements in
+  streams using HyperLogLog counters.
+
+- LongArrayBitVectors now check that its length does not exceed 2^37.
+
+- Now ProgressLogger makes it possible to update with a given value, or
+  to update and force display. Moreover, times per time interval are
+  scaled so slow processes gets items per minute, hour or day.
+
+- New Util methods to manipulate and generate permutations.
+
+- New Util.randomSeed()/Util.randomSeedBytes() methods that generates a
+  reasonable seed using System.nanoTime() and MurmurHash3.
+
+- We now check that the buffer of a FastBufferedReader is of nonzero length.
+
+- Fast flip() methods in LongArrayBitVector.
+
+1.0.11
+
+- BitVectors.readFast()/BitVectors.writeFast() now use more liberal interfaces.
+
+- Equality in AbstractBitVector is computed quickly word by word, and not
+  scanning bit by bit (ouch!).
+
+- The testForPosition boolean flag in InputBitStream and OutputBitStream
+  constructors now just inhibits just the very slow reflective test for
+  the existence of a getChannel() method. Conformance to the
+  RepositionableStream interface is always checked (requested by Bryan
+  Thompson).
+
+- {Input,Output}BitStream.close() was throwing a null pointer exception in
+  certain cases (thanks to Bryan Thompson for finding and fixing this bug).
+
+- CanonicalFast64CodeWordDecoder now works with 0 or 1 symbols (thanks to
+  Bryan Thompson for letting me notice this problem).
+
+- IntBloomFilter was initialising incorrectly the field m (thanks to David
+  Greenspan for finding and fixing this bug).
+
+- NullOutputStream is now a RepositionableSteam. In this way, the creation
+  of an OutputBitStream wrapping a NullOutputStream is much quicker.
+
+- Fixed integer overflow bugs in LongArrayBitVector.wrap() and elsewhere.
+
+1.0.10
+
+- Fixed return type of writeLongZeta to int.
+
+- New DelimitedWordReader class for tokenising streams by
+  delimiters (rather than by word constituents).
+
+- Fixed a small bug in ObjectParser: string arguments were
+  trimmed even if delimited by quotes.
+
+- ObjectParser will now accept null contexts.
+
+- FastBufferedReader/DelimitedWordReader have toString()/toSpec()
+  methods.
+
+- New MutableString.skipSelfDelimUTF8() method.
+
+1.0.9
+
+- New ByteBufferInputStream.map() method that will map any file into a
+  memory-mapped array of ByteBuffers and expose them as a measurable,
+  repositionable InputStream. Very useful to work around the 2GiB limit
+  of FileChannel.map().
+
+- HuTuckerCodec can now get frequencies as a vector of longs.
+  HuTuckerTransformationStrategy uses the new constructor.
+
+- Code in replace() and clear() methods was not using the fact
+  that unused parts of a LongArrayBitVector are maintained
+  clear. This caused a significant slowdown when replacing
+  or clearing vectors with a large backing array.
+
+- New OfflineIterable class that makes it possible to dump and
+  reread quickly temporary data.
+
+1.0.8
+
+- InputBitStream and OutputBitStream have new constructors that make it
+  possible to skip the reflective test that are necessary to support
+  position(). This feature was requested by Bryan Thompson, who had to
+  create often a large number of bit streams. Additionally, there is a
+  constructor accepting a file input/output stream that invokes
+  getChannel() without using reflection.
+
+- New Util.getDebugLogger() method for getting more detailed
+  debugging programmatically (e.g., when testing). More generally,
+  now it is possible to configure the log level when autoconfiguring
+  Log4J.
+
+- BitVector.hashCode() has been finally nailed down and documented. The
+  chosen function seems to be reasonable and quick. Sorry if some
+  serialised classes out there depended on it...
+
+- Fixed old bug in ImmutableBinaryTrie: a root with a non-empty
+  compacted path would have returned an incorrect approximated
+  interval on prefixes of that path. Thanks to Peni Nissani for
+  finding this bug.
+
+- Slight impromevent to Fast.select(), which was using a few redundant
+  instruction when doing broadword comparisons.
+
+1.0.7
+
+- Fixed obnoxious bug in LongArrayBitVector.replace(BitVector). In
+  some cases bit vectors with garbage after length could have been
+  generated.
+
+- Fixed bug in LongArrayBitVector.longestCommonPrefixLength(). When
+  comparing a string to one of its prefix the returned length was
+  sometimes incorrect.
+
+- New methods BitVector.firstZero/BitVector.lastZero() with
+  fast implementations.
+
+- New methods in BitVectors that dump on disk and expose
+  as an iterable object the bit vectors returned by an iteartor.
+
+1.0.6
+
+- New transformation strategy that remaps bit vectors so that they
+  are prefix free.
+
+- Fixed a horrendous bug: AbstractBitVector was implementing equals(),
+  but not hashCode(). This fact was causing a number of problems with
+  collections. Since I had to fix it anyway, I built in a better
+  hash function, too.
+
+1.0.5
+
+- WARNING: ObjectParser now throws more accurate exception. As
+  an unpleasing side effect, it throws more checked exceptions
+  than it used to, so your code might not compile.
+
+- New (obviously missing) interval comparators in Intervals.
+
+- Fixed absolutely stupid bug in CanonicalFast64CodeWordDecoder:
+  the size of the lastCodeWordPlusOne array would have been
+  the number of codewords, and not the number of codeword
+  lengths. The resulting array was an order of magnitude larger
+  than necessary, which wasn't properly a bug, but very annoying
+  nonetheless (in particular when you generate thousands of
+  decoders, as we do for our large time-aware graphs).
+
+- New optional context object in ObjectParser.
+
+1.0.4
+
+- FastBufferedReader has now a more flexible approach to word
+  segmentation.
+
+1.0.3
+
+- ShiftAddXorSignedStringMap moved here from Sux4J. It can
+  sign any given function (usually one from Sux4J).
+
+- Fixed bug in LongArrayBitVector.length(long) (the
+  underlying long array was not cleared properly).
+
+- Optimised implementations for LongArrayBitVector.{fill,flip}().
+
+- Fixed very stupid but pernicious bug in ImmutableExternalPrefixMap,
+  which was actually a bug in AbstractPrefixMap: the default
+  return value of the underlying function should have been
+  set to -1.
+
+1.0.2
+
+- Fixed very old bug in MutableString.print(PrintStream).
+
+- New methods in BitVector. In particular, fast().
+
+- Fixed bug in LongArrayBitVector.replace(LongArrayBitVector).
+
+- Fixed bug in LongArrayBitVector.copy(LongArrayBitVector).
+
+- New ISO-8859-1 transformation strategy.
+
+- Double (CharSequence/MutableString) implementation for
+  UTF16/ISO-8859-1 transformation strategies.
+  
+- Several performance enhancements to bit vector classes.
+
+- A series of wrappers in TransformationStrategies apply
+  transforms to all the elements of collection-like objects.
+
+1.0.1
+
+- New method BitVector.append(BitVector).
+
+- PrefixCoderTransformationStrategy and UTF16TransformationStrategy
+  now are thread-safe, as they return a new instance at each call.
+  They now both support prefix-free and non-prefix-free encodings.
+
+- UTF16TransformationStrategy has been now replaced by two singleton
+  instances in TransformationStrategies.
+
+- Significantly optimised LongArrayBitVector.getLong().
+
+1.0
+
+- First release.
